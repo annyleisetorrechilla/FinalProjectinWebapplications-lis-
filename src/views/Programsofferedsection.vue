@@ -1,6 +1,6 @@
 <script setup>
-import computerScienceLogo from '../assets/1-150x150.png'
-import informationTechnologyLogo from '../assets/CSS_PNG-150x150.png'
+import computerScienceLogo from '../assets/CSS_PNG-150x150.png'
+import informationTechnologyLogo from '../assets/1-150x150.png'
 import digitalMediaLogo from '../assets/MIDAS_PNG-150x150.png'
 import libraryScienceLogo from '../assets/LISSO-150x150.png'
 
@@ -19,7 +19,7 @@ const programs = [
     description:
       'The Information Technology (IT) program is designed to bridge the gap between computer science and management information systems.',
     logo: informationTechnologyLogo,
-    logoAlt: 'Information Technology Student Organization logo',
+    logoAlt: 'Information Technology Society logo',
   },
   {
     code: 'BSDMIA',
@@ -43,9 +43,21 @@ const programs = [
 <template>
   <section id="programs" class="programs-section" aria-label="Academic programs">
     <div class="program-grid">
-      <article v-for="program in programs" :key="program.code" class="program-card">
+      <article
+        v-for="program in programs"
+        :id="`program-${program.code.toLowerCase()}`"
+        :key="program.code"
+        class="program-card"
+      >
         <div class="program-logo-wrap">
-          <img class="program-logo" :src="program.logo" :alt="program.logoAlt" />
+          <RouterLink
+            v-if="program.code === 'BSCS' || program.code === 'BSIT'"
+            :to="program.code === 'BSCS' ? '/computer-science' : '/information-technology'"
+            :aria-label="`Open ${program.title} program page`"
+          >
+            <img class="program-logo" :src="program.logo" :alt="program.logoAlt" />
+          </RouterLink>
+          <img v-else class="program-logo" :src="program.logo" :alt="program.logoAlt" />
         </div>
         <div class="program-details">
           <p class="program-code">{{ program.code }}</p>
@@ -62,7 +74,7 @@ const programs = [
   display: grid;
   place-items: center;
   min-height: 470px;
-  padding: 2rem 1.5rem;
+  padding: 2rem;
   background: #ffffff;
   scroll-margin-top: 5rem;
 }
@@ -78,6 +90,22 @@ const programs = [
 .program-card {
   min-width: 0;
   text-align: center;
+  scroll-margin-top: 5rem;
+  transition: transform 0.2s ease;
+}
+
+.program-card:hover {
+  transform: scale(1.04);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .program-card {
+    transition: none;
+  }
+
+  .program-card:hover {
+    transform: none;
+  }
 }
 
 .program-logo-wrap {
@@ -96,12 +124,18 @@ const programs = [
 }
 
 .program-details {
-  min-height: 215px;
-  padding: 1rem 1.15rem 1.35rem;
+  box-sizing: border-box;
+  min-height: 300px;
+  padding: 1.25rem;
   border: 1px solid #dedede;
   border-radius: 3px;
   background: #ffffff;
-  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.09);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.22);
+  transition: box-shadow 0.2s ease;
+}
+
+.program-card:hover .program-details {
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.32);
 }
 
 .program-code {
@@ -128,7 +162,7 @@ const programs = [
   line-height: 1.8;
 }
 
-@media (max-width: 760px) {
+@media (max-width: 900px) {
   .program-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     max-width: 600px;
